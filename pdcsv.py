@@ -1,22 +1,18 @@
 import pandas as pd
 import base64
 
-# 1. Read the CSV
-
-# Enter Path To CSV Here
+# Read the CSV without headers
 df = pd.read_csv('./names.csv', header=None)
 
-# 2. Remove rows with "Not Found"
-df = df[df[1] != "Not Found"]
+# Delete the first row (old header)
+df = df.iloc[1:]
 
-# 3. Remove all rows with entirely missing data
-df = df.dropna(how='all')
+# Assign new headers
+df.columns = ['Name', 'ID']
 
-# Reset index after dropping rows
-df = df.reset_index(drop=True)
+# Filter and process the DataFrame
+df = df[df['ID'] != "Not Found"].dropna(how='all').reset_index(drop=True)
+df['base64ID'] = df['ID'].apply(lambda x: base64.b64encode(('Teacher-' + str(x)).encode()).decode())
 
-# 4. Add 'base64ID' column
-df['base64ID'] = df[1].apply(lambda x: base64.b64encode(('Teacher-' + str(x)).encode()).decode())
-
-# 5. Write the updated data back to the CSV, with column names
-df.to_csv('b64.csv', index=False, header=[0, 1, 'base64ID'])
+# Write the DataFrame to a new CSV file
+df.to_csv('b64.csv', index=False)
