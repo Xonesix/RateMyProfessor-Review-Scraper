@@ -1,0 +1,10 @@
+name.csv
+scrapingUTD.py
+/node_modules/
+preProcessingData.py
+*.csv
+/.venv/
+secret_headers.py
+/__pycache__/
+.DS_Store
+utScraping.js
